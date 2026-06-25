@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ collection.label }} holdings - Materia Markets{% endblock %}
+{% block content %}
+<style>
+    .toolbar { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+    .toolbar input { margin-bottom: 0; max-width: 280px; }
+    th a { color: inherit; }
+</style>
+
+<p><a href="{{ url_for('view_collection', collection_id=collection.id) }}">&larr; Back to {{ collection.label }}</a></p>
+<h2>All holdings ({{ holdings|length }} cards)</h2>
+
+<div class="toolbar">
+    <input type="text" id="searchBox" placeholder="Search by card name..." oninput="filterRows()">
+    <a href="{{ url_for('export_holdings_csv', collection_id=collection.id) }}" class="btn">Export CSV</a>
+</div>
+
+<table id="holdingsTable">
+    <tr>
+        {% macro sort_link(key, label) %}
+        <a href="{{ url_for('view_holdings', collection_id=collection.id, sort=key, dir=('asc' if sort==key and direction=='desc' else 'desc')) }}">
+            {{ label }}{% if sort==key %} {{ '▲' if direction=='asc' else '▼' }}{% endif %}
+        </a>
+        {% endmacro %}
+        <th>{{ sort_link('name', 'Card') }}</th>
+        <th>#</th>
+        <th>{{ sort_link('set', 'Set') }}</th>
+        <th>{{ sort_link('qty', 'Qty') }}</th>
+        <th>Finish</th>
+        <th>{{ sort_link('price', 'Price') }}</th>
+        <th>{{ sort_link('total', 'Total') }}</th>
+    </tr>
+    {% for h in holdings %}
+    <tr>
+        <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=h.entry_id) }}">{{ h.name }}</a></td>
+        <td>{{ h.collector_number }}</td>
+        <td>{{ h.set_name }}</td>
+        <td>{{ h.quantity }}</td>
+        <td>{{ h.finish }}</td>
+        <td>${{ "%.2f"|format(h.unit_price_usd) }}</td>
+        <td>${{ "%.2f"|format(h.total_value) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+    function filterRows() {
+        const q = document.getElementById('searchBox').value.toLowerCase();
+        document.querySelectorAll('#holdingsTable tr').forEach((row, i) => {
+            if (i === 0) return;
+            const name = row.cells[0].textContent.toLowerCase();
+            row.style.display = name.includes(q) ? '' : 'none';
+        });
+    }
+</script>
+{% endblock %}

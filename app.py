@@ -1,4 +1,7 @@
-from flask import Flask, abort, flash, redirect, render_template, request, url_for
+import csv
+import io
+
+from flask import Flask, Response, abort, flash, redirect, render_template, request, url_for
 from flask_login import (
     LoginManager,
     current_user,
@@ -121,15 +124,61 @@ def view_collection(collection_id):
         c for c in db.get_collections_for_user(int(current_user.id)) if c["id"] != collection_id
     ]
 
+    history = db.get_value_history(collection_id)
+    overall_change = overall_pct = None
+    if len(history) >= 2 and history[0]["total_usd"]:
+        overall_change = history[-1]["total_usd"] - history[0]["total_usd"]
+        overall_pct = overall_change / history[0]["total_usd"] * 100
+
     return render_template(
         "index.html",
         collection=collection,
         other_collections=other_collections,
-        history=db.get_value_history(collection_id),
+        history=history,
         summary=db.get_latest_summary(collection_id),
+        overall_change=overall_change,
+        overall_pct=overall_pct,
         movers=db.get_movers(collection_id, limit=movers_count),
         most_valuable=db.get_most_valuable_cards(collection_id, limit=movers_count),
         movers_count=movers_count,
+    )
+
+
+@app.route("/collections/<int:collection_id>/holdings")
+@login_required
+def view_holdings(collection_id):
+    collection = _owned_collection_or_404(collection_id)
+    sort = request.args.get("sort", "total")
+    direction = request.args.get("dir", "desc")
+    holdings = db.get_holdings(collection_id, sort=sort, direction=direction)
+    return render_template(
+        "holdings.html",
+        collection=collection,
+        holdings=holdings,
+        sort=sort,
+        direction=direction,
+    )
+
+
+@app.route("/collections/<int:collection_id>/export.csv")
+@login_required
+def export_holdings_csv(collection_id):
+    collection = _owned_collection_or_404(collection_id)
+    holdings = db.get_holdings(collection_id, sort="total", direction="desc")
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Card", "Collector Number", "Set", "Finish", "Quantity", "Unit Price (USD)", "Total Value (USD)"])
+    for h in holdings:
+        writer.writerow(
+            [h["name"], h["collector_number"], h["set_name"], h["finish"], h["quantity"], h["unit_price_usd"], h["total_value"]]
+        )
+
+    safe_label = "".join(c if c.isalnum() else "_" for c in collection["label"])
+    return Response(
+        buf.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{safe_label}_holdings.csv"'},
     )
 
 

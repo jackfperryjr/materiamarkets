@@ -186,26 +186,44 @@ def get_card_price_history(collection_id, entry_id):
         return rows
 
 
-def get_most_valuable_cards(collection_id, limit=10):
+HOLDINGS_SORT_COLUMNS = {
+    "name": "i.name",
+    "set": "i.set_name",
+    "qty": "i.quantity",
+    "price": "i.unit_price_usd",
+    "total": "i.quantity * i.unit_price_usd",
+}
+
+
+def get_holdings(collection_id, limit=None, sort="total", direction="desc"):
+    sort_col = HOLDINGS_SORT_COLUMNS.get(sort, HOLDINGS_SORT_COLUMNS["total"])
+    direction_sql = "ASC" if direction == "asc" else "DESC"
+
+    query = f"""
+        SELECT i.entry_id, i.name, i.set_name, i.collector_number, i.finish,
+               i.quantity, i.unit_price_usd, i.quantity * i.unit_price_usd AS total_value
+        FROM snapshot_items i
+        JOIN snapshots s ON s.id = i.snapshot_id
+        WHERE s.collection_id = %s
+            AND s.id = (SELECT id FROM snapshots WHERE collection_id = %s ORDER BY fetched_at DESC LIMIT 1)
+            AND i.unit_price_usd IS NOT NULL
+        ORDER BY {sort_col} {direction_sql}
+    """
+    params = [collection_id, collection_id]
+    if limit is not None:
+        query += " LIMIT %s"
+        params.append(limit)
+
     with get_connection() as conn:
-        rows = conn.execute(
-            """
-            SELECT i.entry_id, i.name, i.set_name, i.collector_number, i.finish,
-                   i.quantity, i.unit_price_usd, i.quantity * i.unit_price_usd AS total_value
-            FROM snapshot_items i
-            JOIN snapshots s ON s.id = i.snapshot_id
-            WHERE s.collection_id = %s
-                AND s.id = (SELECT id FROM snapshots WHERE collection_id = %s ORDER BY fetched_at DESC LIMIT 1)
-                AND i.unit_price_usd IS NOT NULL
-            ORDER BY total_value DESC
-            LIMIT %s
-            """,
-            (collection_id, collection_id, limit),
-        ).fetchall()
-        for row in rows:
-            row["unit_price_usd"] = float(row["unit_price_usd"])
-            row["total_value"] = float(row["total_value"])
-        return rows
+        rows = conn.execute(query, params).fetchall()
+    for row in rows:
+        row["unit_price_usd"] = float(row["unit_price_usd"])
+        row["total_value"] = float(row["total_value"])
+    return rows
+
+
+def get_most_valuable_cards(collection_id, limit=10):
+    return get_holdings(collection_id, limit=limit, sort="total", direction="desc")
 
 
 def get_value_history(collection_id):

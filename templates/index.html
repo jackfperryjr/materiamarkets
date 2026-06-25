@@ -42,10 +42,21 @@
         <div class="value">{{ history|length }}</div>
         <div class="label">Snapshots recorded</div>
     </div>
+    {% if overall_change is not none %}
+    <div>
+        <div class="value {{ 'gain' if overall_change >= 0 else 'loss' }}">
+            {{ '+' if overall_change >= 0 else '-' }}${{ "%.2f"|format(overall_change|abs) }}
+            ({{ "%.1f"|format(overall_pct) }}%)
+        </div>
+        <div class="label">Since you started tracking</div>
+    </div>
+    {% endif %}
     <form action="{{ url_for('refresh_collection', collection_id=collection.id) }}" method="post">
         {% include "_csrf.html" %}
         <button type="submit">Refresh now</button>
     </form>
+    <a href="{{ url_for('view_holdings', collection_id=collection.id) }}" class="btn">All holdings</a>
+    <a href="{{ url_for('export_holdings_csv', collection_id=collection.id) }}" class="btn">Export CSV</a>
 </div>
 
 <div class="chart-wrap">
