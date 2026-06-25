@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ collection.label }} - Collection Tracker{% endblock %}
+{% block title %}{{ collection.label }} - Materia Markets{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -55,6 +55,10 @@
 <div class="chart-wrap">
     <canvas id="valueChart" height="80"></canvas>
 </div>
+
+{% if movers.ready and movers.stale %}
+<p class="empty" style="margin-bottom:1rem;">No price changes in the latest snapshot — showing the last movers from {{ movers.as_of.strftime('%b %d, %Y %H:%M UTC') if movers.as_of else 'an earlier snapshot' }}.</p>
+{% endif %}
 
 <div class="movers">
     <div class="panel">

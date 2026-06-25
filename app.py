@@ -148,6 +148,18 @@ def delete_collection(collection_id):
     return redirect(url_for("index"))
 
 
+@app.route("/collections/<int:collection_id>/rename", methods=["POST"])
+@login_required
+def rename_collection(collection_id):
+    _owned_collection_or_404(collection_id)
+    label = request.form.get("label", "").strip()
+    if not label:
+        flash("Label can't be empty.")
+    else:
+        db.rename_collection(collection_id, label)
+    return redirect(url_for("settings"))
+
+
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():

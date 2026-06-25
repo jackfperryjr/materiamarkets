@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Log in - Collection Tracker{% endblock %}
+{% block title %}Log in - Materia Markets{% endblock %}
 {% block content %}
+<div class="auth-wrap">
 <div class="card">
-    <h2>Log in</h2>
+    <h2>Welcome back</h2>
     <form method="post">
         {% include "_csrf.html" %}
         <label>Email</label>
@@ -12,5 +13,6 @@
         <button type="submit">Log in</button>
     </form>
     <p style="margin-top:1rem;color:#9aa0a6;">Need an account? <a href="{{ url_for('signup_view') }}">Sign up</a></p>
+</div>
 </div>
 {% endblock %}

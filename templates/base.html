@@ -2,22 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Collection Tracker{% endblock %}</title>
+<title>{% block title %}Materia Markets{% endblock %}</title>
 <style>
-    body { font-family: -apple-system, Segoe UI, sans-serif; background: #0f1115; color: #e6e6e6; margin: 0; padding: 2rem; }
-    a { color: #60a5fa; text-decoration: none; }
+    :root {
+        --mat-green: #4ade80;
+        --mat-blue: #60a5fa;
+        --mat-purple: #c084fc;
+    }
+    body {
+        font-family: -apple-system, Segoe UI, sans-serif;
+        background: radial-gradient(circle at 15% 0%, #1b1530 0%, #0f1115 45%) fixed;
+        color: #e6e6e6;
+        margin: 0;
+        padding: 2rem;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+    a { color: var(--mat-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
     h1 { margin-bottom: 0.25rem; }
     .subtitle { color: #9aa0a6; margin-bottom: 1.5rem; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .brand {
+        font-weight: 700;
+        font-size: 1.3rem;
+        background: linear-gradient(90deg, var(--mat-green), var(--mat-blue), var(--mat-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: 0.02em;
+    }
+    .brand .orb { -webkit-text-fill-color: initial; color: initial; filter: none; margin-right: 0.3rem; }
+    .tagline { color: #9aa0a6; font-size: 0.75rem; font-style: italic; margin-top: -0.2rem; }
+    .topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
     .topbar nav { display: flex; gap: 1rem; align-items: center; font-size: 0.85rem; color: #9aa0a6; }
     .flash { background: #3b2330; border: 1px solid #7f1d1d; color: #fca5a5; padding: 0.6rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
     label { display: block; margin-bottom: 0.3rem; color: #9aa0a6; font-size: 0.85rem; }
     input, select { background: #1a1d24; border: 1px solid #2a2e38; color: #e6e6e6; padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; width: 100%; max-width: 360px; box-sizing: border-box; }
-    button, .btn { background: #3b82f6; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
-    button:hover, .btn:hover { background: #2563eb; }
-    .btn-danger { background: #ef4444; }
-    .btn-danger:hover { background: #dc2626; }
-    .card { background: #1a1d24; border-radius: 10px; padding: 1.5rem; max-width: 420px; }
+    input:focus, select:focus { outline: none; border-color: var(--mat-blue); box-shadow: 0 0 0 2px rgba(96,165,250,0.25); }
+    button, .btn {
+        background: linear-gradient(135deg, var(--mat-blue), var(--mat-purple));
+        color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 999px;
+        cursor: pointer; font-size: 0.9rem; font-weight: 600;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    button:hover, .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(96,165,250,0.3); text-decoration: none; }
+    .btn-danger { background: linear-gradient(135deg, #f87171, #ef4444); }
+    .card {
+        background: #1a1d24;
+        border: 1px solid #2a2e38;
+        border-radius: 14px;
+        padding: 2rem;
+        max-width: 420px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .auth-wrap { display: flex; min-height: 70vh; align-items: center; justify-content: center; }
+    .auth-wrap .card { width: 100%; }
+    .auth-wrap h2 { text-align: center; margin-top: 0; }
+    .auth-wrap form { display: flex; flex-direction: column; align-items: center; }
+    .auth-wrap input { text-align: left; }
+    .auth-wrap button { width: 100%; margin-top: 0.5rem; }
+    .auth-wrap p { text-align: center; }
     form.inline { display: inline; }
     table { border-collapse: collapse; width: 100%; background: #1a1d24; border-radius: 10px; overflow: hidden; }
     th, td { padding: 0.5rem 0.75rem; text-align: left; font-size: 0.85rem; }
@@ -27,7 +71,10 @@
 </head>
 <body>
     <div class="topbar">
-        <h1 style="margin:0;font-size:1.2rem;">Collection Tracker</h1>
+        <div>
+            <div class="brand"><span class="orb">🔮</span>Materia Markets</div>
+            <div class="tagline">Gil and Bear It</div>
+        </div>
         {% if current_user.is_authenticated %}
         <nav>
             <span>{{ current_user.email }}</span>

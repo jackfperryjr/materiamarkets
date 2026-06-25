@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Sign up - Collection Tracker{% endblock %}
+{% block title %}Sign up - Materia Markets{% endblock %}
 {% block content %}
+<div class="auth-wrap">
 <div class="card">
     <h2>Create your account</h2>
     <form method="post">
@@ -14,5 +15,6 @@
         <button type="submit">Sign up</button>
     </form>
     <p style="margin-top:1rem;color:#9aa0a6;">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+</div>
 </div>
 {% endblock %}

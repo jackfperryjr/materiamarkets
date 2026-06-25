@@ -200,13 +200,7 @@ def get_latest_summary(collection_id):
     return history[-1]
 
 
-def get_movers(collection_id, limit=10):
-    snapshots = get_latest_snapshot_ids(collection_id, 2)
-    if len(snapshots) < 2:
-        return {"ready": False, "gainers": [], "losers": []}
-
-    latest_id, previous_id = snapshots[0]["id"], snapshots[1]["id"]
-
+def _diff_snapshots(latest_id, previous_id):
     with get_connection() as conn:
         rows = conn.execute(
             """
@@ -241,7 +235,36 @@ def get_movers(collection_id, limit=10):
         row["pct_change"] = (price_change / row["old_price"] * 100) if row["old_price"] else None
         movers.append(row)
 
-    gainers = sorted(movers, key=lambda r: r["value_change"], reverse=True)[:limit]
-    losers = sorted(movers, key=lambda r: r["value_change"])[:limit]
+    return movers
 
-    return {"ready": True, "gainers": gainers, "losers": losers}
+
+def get_movers(collection_id, limit=10, lookback=30):
+    snapshots = get_latest_snapshot_ids(collection_id, lookback)
+    if len(snapshots) < 2:
+        return {"ready": False, "gainers": [], "losers": [], "as_of": None, "stale": False}
+
+    for i in range(len(snapshots) - 1):
+        movers = _diff_snapshots(snapshots[i]["id"], snapshots[i + 1]["id"])
+        if movers:
+            return {
+                "ready": True,
+                "gainers": sorted(
+                    (m for m in movers if m["value_change"] > 0),
+                    key=lambda r: r["value_change"],
+                    reverse=True,
+                )[:limit],
+                "losers": sorted(
+                    (m for m in movers if m["value_change"] < 0),
+                    key=lambda r: r["value_change"],
+                )[:limit],
+                "as_of": snapshots[i]["fetched_at"],
+                "stale": i > 0,
+            }
+
+    return {
+        "ready": True,
+        "gainers": [],
+        "losers": [],
+        "as_of": snapshots[0]["fetched_at"],
+        "stale": False,
+    }

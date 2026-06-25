@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Settings{% endblock %}
+{% block title %}Settings - Materia Markets{% endblock %}
 {% block content %}
 <h2>Settings</h2>
 
@@ -15,10 +15,17 @@
 
 <h3>Your collections</h3>
 <table>
-    <tr><th>Label</th><th></th></tr>
+    <tr><th>Label</th><th>Rename</th><th></th></tr>
     {% for c in collections %}
     <tr>
         <td><a href="{{ url_for('view_collection', collection_id=c.id) }}">{{ c.label }}</a></td>
+        <td>
+            <form class="inline" action="{{ url_for('rename_collection', collection_id=c.id) }}" method="post" style="display:flex;gap:0.5rem;align-items:center;">
+                {% include "_csrf.html" %}
+                <input type="text" name="label" value="{{ c.label }}" style="margin-bottom:0;width:160px;" required>
+                <button type="submit">Save</button>
+            </form>
+        </td>
         <td>
             <form class="inline" action="{{ url_for('delete_collection', collection_id=c.id) }}" method="post"
                   onsubmit="return confirm('Delete this collection and all of its snapshot history?');">
