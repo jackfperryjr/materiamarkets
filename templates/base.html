@@ -84,6 +84,11 @@
                 <button type="submit">Log out</button>
             </form>
         </nav>
+        {% else %}
+        <nav>
+            <a href="{{ url_for('login') }}">Log in</a>
+            <a href="{{ url_for('signup_view') }}" class="btn">Sign up</a>
+        </nav>
         {% endif %}
     </div>
 

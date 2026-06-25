@@ -72,8 +72,9 @@ def logout():
 
 
 @app.route("/")
-@login_required
 def index():
+    if not current_user.is_authenticated:
+        return render_template("landing.html")
     collections = db.get_collections_for_user(int(current_user.id))
     if not collections:
         return redirect(url_for("new_collection"))

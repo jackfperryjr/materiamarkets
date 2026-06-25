@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Materia Markets - Track your MTG collection's value{% endblock %}
+{% block content %}
+<style>
+    .hero { text-align: center; padding: 4rem 1rem 3rem; }
+    .hero h1 {
+        font-size: 2.6rem;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(90deg, var(--mat-green), var(--mat-blue), var(--mat-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .hero p { color: #9aa0a6; font-size: 1.1rem; max-width: 560px; margin: 0 auto 2rem; }
+    .hero .btn { font-size: 1rem; padding: 0.8rem 1.8rem; }
+    .features { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+    .feature {
+        background: #1a1d24; border: 1px solid #2a2e38; border-radius: 14px;
+        padding: 1.5rem; max-width: 280px; text-align: left;
+    }
+    .feature .emoji { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .feature h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .feature p { color: #9aa0a6; font-size: 0.85rem; margin: 0; }
+    .closing { text-align: center; margin-top: 3rem; color: #9aa0a6; font-style: italic; }
+</style>
+
+<div class="hero">
+    <h1>Your binder is basically a stock portfolio.</h1>
+    <p>
+        Paste your public Moxfield collection link and Materia Markets turns it into a live
+        ticker — total value over time, plus the biggest gainers and losers since your last
+        check-in. No re-entering a single card. No more wondering if that foil Cloud is
+        quietly mooning while you weren't looking.
+    </p>
+    <a href="{{ url_for('signup_view') }}" class="btn">Start tracking — it's free</a>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <div class="emoji">🔗</div>
+        <h3>Link, don't re-type</h3>
+        <p>Drop in your public Moxfield collection link and we pull every card automatically — no manual entry, ever.</p>
+    </div>
+    <div class="feature">
+        <div class="emoji">📈</div>
+        <h3>Watch the value move</h3>
+        <p>Every refresh is a snapshot. Watch your whole collection's value rise and fall over time on one chart.</p>
+    </div>
+    <div class="feature">
+        <div class="emoji">🏆</div>
+        <h3>Top movers, ranked</h3>
+        <p>See your biggest gainers and losers since the last snapshot, stock-ticker style — pick how many you want to see.</p>
+    </div>
+    <div class="feature">
+        <div class="emoji">🗂️</div>
+        <h3>Track more than one</h3>
+        <p>Standard sets, Commander piles, that one Final Fantasy binder you can't stop buying into — add as many collections as you like.</p>
+    </div>
+</div>
+
+<p class="closing">Gil and Bear It.</p>
+{% endblock %}
