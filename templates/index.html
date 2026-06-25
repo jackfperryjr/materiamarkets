@@ -120,6 +120,26 @@
         </table>
         {% endif %}
     </div>
+
+    <div class="panel">
+        <h2>Most Valuable</h2>
+        {% if not most_valuable %}
+            <p class="empty">No priced cards yet.</p>
+        {% else %}
+        <table>
+            <tr><th>Card</th><th>#</th><th>Set</th><th>Price</th><th>Total</th></tr>
+            {% for m in most_valuable %}
+            <tr>
+                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
+                <td>{{ m.collector_number }}</td>
+                <td>{{ m.set_name }}</td>
+                <td>${{ "%.2f"|format(m.unit_price_usd) }}</td>
+                <td>${{ "%.2f"|format(m.total_value) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
 </div>
 
 <script>

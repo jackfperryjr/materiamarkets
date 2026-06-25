@@ -128,6 +128,7 @@ def view_collection(collection_id):
         history=db.get_value_history(collection_id),
         summary=db.get_latest_summary(collection_id),
         movers=db.get_movers(collection_id, limit=movers_count),
+        most_valuable=db.get_most_valuable_cards(collection_id, limit=movers_count),
         movers_count=movers_count,
     )
 

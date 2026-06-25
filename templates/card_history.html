@@ -8,21 +8,30 @@
     .summary { display: flex; gap: 2rem; margin-bottom: 1.5rem; align-items: flex-end; }
     .summary .value { font-size: 2rem; font-weight: 600; }
     .summary .label { color: #9aa0a6; font-size: 0.85rem; }
+    .card-header { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-start; }
+    .card-header img { width: 220px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
 </style>
 
 <p><a href="{{ url_for('view_collection', collection_id=collection.id) }}">&larr; Back to {{ collection.label }}</a></p>
 
-<h2 style="margin-bottom:0;">{{ card.name }}</h2>
-<p class="subtitle">{{ card.set_name }} #{{ card.collector_number }} &middot; {{ card.finish }} &middot; qty {{ card.quantity }}</p>
+<div class="card-header">
+    {% if card.scryfall_id %}
+    <img src="https://api.scryfall.com/cards/{{ card.scryfall_id }}?format=image&version=normal" alt="{{ card.name }}">
+    {% endif %}
+    <div>
+        <h2 style="margin-bottom:0;">{{ card.name }}</h2>
+        <p class="subtitle">{{ card.set_name }} #{{ card.collector_number }} &middot; {{ card.finish }} &middot; qty {{ card.quantity }}</p>
 
-<div class="summary">
-    <div>
-        <div class="value">${{ "%.2f"|format(card.unit_price_usd) if card.unit_price_usd is not none else "—" }}</div>
-        <div class="label">Current price (USD)</div>
-    </div>
-    <div>
-        <div class="value">{{ history|length }}</div>
-        <div class="label">Snapshots recorded</div>
+        <div class="summary">
+            <div>
+                <div class="value">${{ "%.2f"|format(card.unit_price_usd) if card.unit_price_usd is not none else "—" }}</div>
+                <div class="label">Current price (USD)</div>
+            </div>
+            <div>
+                <div class="value">{{ history|length }}</div>
+                <div class="label">Snapshots recorded</div>
+            </div>
+        </div>
     </div>
 </div>
 

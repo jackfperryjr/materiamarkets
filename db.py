@@ -172,7 +172,7 @@ def get_card_price_history(collection_id, entry_id):
         rows = conn.execute(
             """
             SELECT s.fetched_at, i.name, i.set_name, i.collector_number, i.finish,
-                   i.quantity, i.unit_price_usd
+                   i.quantity, i.unit_price_usd, i.scryfall_id
             FROM snapshot_items i
             JOIN snapshots s ON s.id = i.snapshot_id
             WHERE s.collection_id = %s AND i.entry_id = %s
@@ -183,6 +183,28 @@ def get_card_price_history(collection_id, entry_id):
         for row in rows:
             if row["unit_price_usd"] is not None:
                 row["unit_price_usd"] = float(row["unit_price_usd"])
+        return rows
+
+
+def get_most_valuable_cards(collection_id, limit=10):
+    with get_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT i.entry_id, i.name, i.set_name, i.collector_number, i.finish,
+                   i.quantity, i.unit_price_usd, i.quantity * i.unit_price_usd AS total_value
+            FROM snapshot_items i
+            JOIN snapshots s ON s.id = i.snapshot_id
+            WHERE s.collection_id = %s
+                AND s.id = (SELECT id FROM snapshots WHERE collection_id = %s ORDER BY fetched_at DESC LIMIT 1)
+                AND i.unit_price_usd IS NOT NULL
+            ORDER BY total_value DESC
+            LIMIT %s
+            """,
+            (collection_id, collection_id, limit),
+        ).fetchall()
+        for row in rows:
+            row["unit_price_usd"] = float(row["unit_price_usd"])
+            row["total_value"] = float(row["total_value"])
         return rows
 
 
