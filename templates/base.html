@@ -31,7 +31,6 @@
         color: transparent;
         letter-spacing: 0.02em;
     }
-    .brand .orb { -webkit-text-fill-color: initial; color: initial; filter: none; margin-right: 0.3rem; }
     .tagline { color: #9aa0a6; font-size: 0.75rem; font-style: italic; margin-top: -0.2rem; }
     .topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
     .topbar nav { display: flex; gap: 1rem; align-items: center; font-size: 0.85rem; color: #9aa0a6; }
@@ -72,7 +71,7 @@
 <body>
     <div class="topbar">
         <div>
-            <div class="brand"><span class="orb">🔮</span>Materia Markets</div>
+            <div class="brand">Materia Markets</div>
             <div class="tagline">Gil and Bear It</div>
         </div>
         {% if current_user.is_authenticated %}
