@@ -14,10 +14,23 @@
     .movers { display: flex; gap: 2rem; flex-wrap: wrap; }
     .gain { color: #4ade80; }
     .loss { color: #f87171; }
-    .panel { flex: 1; min-width: 320px; }
+    .panel { flex: 1; min-width: 320px; max-width: 100%; }
     .panel h2 { font-size: 1rem; margin-bottom: 0.5rem; }
     .empty { color: #9aa0a6; font-style: italic; }
     .controls { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
+    .panel table { table-layout: fixed; }
+    .panel td, .panel th { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.4rem 0.5rem; }
+    .movers-table th:nth-child(1), .movers-table td:nth-child(1) { width: 26%; }
+    .movers-table th:nth-child(2), .movers-table td:nth-child(2) { width: 7%; }
+    .movers-table th:nth-child(3), .movers-table td:nth-child(3) { width: 15%; }
+    .movers-table th:nth-child(4), .movers-table td:nth-child(4) { width: 15%; }
+    .movers-table th:nth-child(5), .movers-table td:nth-child(5) { width: 15%; }
+    .movers-table th:nth-child(6), .movers-table td:nth-child(6) { width: 22%; }
+    .valuable-table th:nth-child(1), .valuable-table td:nth-child(1) { width: 32%; }
+    .valuable-table th:nth-child(2), .valuable-table td:nth-child(2) { width: 9%; }
+    .valuable-table th:nth-child(3), .valuable-table td:nth-child(3) { width: 20%; }
+    .valuable-table th:nth-child(4), .valuable-table td:nth-child(4) { width: 19%; }
+    .valuable-table th:nth-child(5), .valuable-table td:nth-child(5) { width: 20%; }
 </style>
 
 <div class="controls">
@@ -81,11 +94,11 @@
         {% elif not movers.gainers %}
             <p class="empty">No price increases since the last snapshot.</p>
         {% else %}
-        <table>
+        <table class="movers-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.gainers %}
             <tr>
-                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
+                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}" title="{{ m.name }}">{{ m.name }}</a></td>
                 <td>{{ m.collector_number }}</td>
                 <td>{{ m.set_name }}</td>
                 <td>${{ "%.2f"|format(m.old_price) }}</td>
@@ -104,11 +117,11 @@
         {% elif not movers.losers %}
             <p class="empty">No price decreases since the last snapshot.</p>
         {% else %}
-        <table>
+        <table class="movers-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.losers %}
             <tr>
-                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
+                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}" title="{{ m.name }}">{{ m.name }}</a></td>
                 <td>{{ m.collector_number }}</td>
                 <td>{{ m.set_name }}</td>
                 <td>${{ "%.2f"|format(m.old_price) }}</td>
@@ -125,11 +138,11 @@
         {% if not most_valuable %}
             <p class="empty">No priced cards yet.</p>
         {% else %}
-        <table>
+        <table class="valuable-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Price</th><th>Total</th></tr>
             {% for m in most_valuable %}
             <tr>
-                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
+                <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}" title="{{ m.name }}">{{ m.name }}</a></td>
                 <td>{{ m.collector_number }}</td>
                 <td>{{ m.set_name }}</td>
                 <td>${{ "%.2f"|format(m.unit_price_usd) }}</td>
