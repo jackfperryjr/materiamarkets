@@ -82,14 +82,12 @@
             <p class="empty">No price increases since the last snapshot.</p>
         {% else %}
         <table>
-            <tr><th>Card</th><th>#</th><th>Set</th><th>Finish</th><th>Qty</th><th>Old</th><th>New</th><th>Change</th></tr>
+            <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.gainers %}
             <tr>
                 <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
                 <td>{{ m.collector_number }}</td>
                 <td>{{ m.set_name }}</td>
-                <td>{{ m.finish }}</td>
-                <td>{{ m.quantity }}</td>
                 <td>${{ "%.2f"|format(m.old_price) }}</td>
                 <td>${{ "%.2f"|format(m.new_price) }}</td>
                 <td class="gain">+${{ "%.2f"|format(m.value_change) }} ({{ "%.1f"|format(m.pct_change) }}%)</td>
@@ -107,14 +105,12 @@
             <p class="empty">No price decreases since the last snapshot.</p>
         {% else %}
         <table>
-            <tr><th>Card</th><th>#</th><th>Set</th><th>Finish</th><th>Qty</th><th>Old</th><th>New</th><th>Change</th></tr>
+            <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.losers %}
             <tr>
                 <td><a href="{{ url_for('card_history', collection_id=collection.id, entry_id=m.entry_id) }}">{{ m.name }}</a></td>
                 <td>{{ m.collector_number }}</td>
                 <td>{{ m.set_name }}</td>
-                <td>{{ m.finish }}</td>
-                <td>{{ m.quantity }}</td>
                 <td>${{ "%.2f"|format(m.old_price) }}</td>
                 <td>${{ "%.2f"|format(m.new_price) }}</td>
                 <td class="loss">-${{ "%.2f"|format(-m.value_change) }} ({{ "%.1f"|format(m.pct_change) }}%)</td>
