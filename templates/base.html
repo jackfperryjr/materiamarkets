@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}Manaticker{% endblock %}</title>
 <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -12,6 +13,7 @@
         --mat-blue: #60a5fa;
         --mat-purple: #c084fc;
     }
+    * { box-sizing: border-box; }
     body {
         font-family: -apple-system, Segoe UI, sans-serif;
         background: radial-gradient(circle at 15% 0%, #1b1530 0%, #0f1115 45%) fixed;
@@ -41,11 +43,11 @@
         letter-spacing: 0.02em;
     }
     .tagline { color: #9aa0a6; font-size: 0.75rem; font-style: italic; margin-top: -0.2rem; }
-    .topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
-    .topbar nav { display: flex; gap: 1rem; align-items: center; font-size: 0.85rem; color: #9aa0a6; }
+    .topbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .topbar nav { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; font-size: 0.85rem; color: #9aa0a6; }
     .flash { background: #3b2330; border: 1px solid #7f1d1d; color: #fca5a5; padding: 0.6rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
     label { display: block; margin-bottom: 0.3rem; color: #9aa0a6; font-size: 0.85rem; }
-    input, select { background: #1a1d24; border: 1px solid #2a2e38; color: #e6e6e6; padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; width: 100%; max-width: 360px; box-sizing: border-box; }
+    input, select { background: #1a1d24; border: 1px solid #2a2e38; color: #e6e6e6; padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; width: 100%; max-width: 360px; }
     input:focus, select:focus { outline: none; border-color: var(--mat-blue); box-shadow: 0 0 0 2px rgba(96,165,250,0.25); }
     button, .btn {
         background: linear-gradient(135deg, var(--mat-blue), var(--mat-purple));
@@ -75,6 +77,16 @@
     th, td { padding: 0.5rem 0.75rem; text-align: left; font-size: 0.85rem; }
     th { background: #22262f; color: #9aa0a6; text-transform: uppercase; font-size: 0.7rem; }
     tr:nth-child(even) { background: #20232b; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1rem; }
+    .table-scroll table { margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+        body { padding: 1rem; }
+        .brand span { font-size: 1.15rem; }
+        .card { padding: 1.25rem; max-width: 100%; }
+        th, td { padding: 0.45rem 0.5rem; font-size: 0.8rem; }
+        button, .btn { padding: 0.55rem 1.1rem; font-size: 0.85rem; }
+    }
 </style>
 </head>
 <body>

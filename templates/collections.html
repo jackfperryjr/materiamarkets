@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Manaticker - Collections{% endblock %}
 {% block content %}
+<style>
+    .row-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .row-actions form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .row-actions input { margin-bottom: 0; width: 160px; }
+</style>
 <h2>Your collections</h2>
+<div class="table-scroll">
 <table>
     <tr><th>Label</th><th>Type</th><th></th></tr>
     {% for c in collections %}
@@ -9,11 +15,11 @@
         <td><a href="{{ url_for('view_collection', collection_id=c.id) }}">{{ c.label }}</a></td>
         <td>{{ "Binder" if c.kind == "binder" else "Collection" }}</td>
         <td>
-            <div style="display:flex;gap:0.5rem;align-items:center;">
+            <div class="row-actions">
                 <a href="{{ url_for('view_collection', collection_id=c.id) }}" class="btn">View</a>
-                <form class="inline" action="{{ url_for('rename_collection', collection_id=c.id) }}" method="post" style="display:flex;gap:0.5rem;align-items:center;">
+                <form class="inline" action="{{ url_for('rename_collection', collection_id=c.id) }}" method="post">
                     {% include "_csrf.html" %}
-                    <input type="text" name="label" value="{{ c.label }}" style="margin-bottom:0;width:160px;" required>
+                    <input type="text" name="label" value="{{ c.label }}" required>
                     <button type="submit">Save</button>
                 </form>
                 <form class="inline" action="{{ url_for('delete_collection', collection_id=c.id) }}" method="post"
@@ -26,5 +32,6 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 <p style="margin-top:1.5rem;"><a href="{{ url_for('new_collection') }}" class="btn">+ Add another collection</a></p>
 {% endblock %}

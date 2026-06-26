@@ -2,9 +2,10 @@
 {% block title %}Manaticker - {{ collection.label }} holdings{% endblock %}
 {% block content %}
 <style>
-    .toolbar { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
-    .toolbar input { margin-bottom: 0; max-width: 280px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1rem; }
+    .toolbar input { margin-bottom: 0; max-width: 280px; flex: 1; }
     th a { color: inherit; }
+    #holdingsTable { min-width: 560px; }
 </style>
 
 <p><a href="{{ url_for('view_collection', collection_id=collection.id) }}">&larr; Back to {{ collection.label }}</a></p>
@@ -15,6 +16,7 @@
     <a href="{{ url_for('export_holdings_csv', collection_id=collection.id) }}" class="btn">Export CSV</a>
 </div>
 
+<div class="table-scroll">
 <table id="holdingsTable">
     <tr>
         {% macro sort_link(key, label) %}
@@ -42,6 +44,7 @@
     </tr>
     {% endfor %}
 </table>
+</div>
 
 <script>
     function filterRows() {

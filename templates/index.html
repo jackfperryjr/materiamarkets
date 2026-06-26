@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    .summary { display: flex; gap: 2rem; margin-bottom: 1.5rem; align-items: flex-end; }
+    .summary { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-end; }
     .summary .value { font-size: 2rem; font-weight: 600; }
     .summary .label { color: #9aa0a6; font-size: 0.85rem; }
     .chart-wrap { background: #1a1d24; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; }
@@ -14,11 +14,15 @@
     .movers { display: flex; gap: 2rem; flex-wrap: wrap; }
     .gain { color: #4ade80; }
     .loss { color: #f87171; }
-    .panel { flex: 1; min-width: 320px; max-width: 100%; }
+    .panel { flex: 1; min-width: 280px; max-width: 100%; }
     .panel h2 { font-size: 1rem; margin-bottom: 0.5rem; }
     .empty { color: #9aa0a6; font-style: italic; }
-    .controls { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
-    .panel table { table-layout: fixed; }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin-bottom: 1.5rem; }
+    .panel table { table-layout: fixed; min-width: 460px; }
+    @media (max-width: 640px) {
+        .summary .value { font-size: 1.5rem; }
+        .chart-container { height: 240px; }
+    }
     .panel td, .panel th { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.4rem 0.5rem; }
     .movers-table th:nth-child(1), .movers-table td:nth-child(1) { width: 26%; }
     .movers-table th:nth-child(2), .movers-table td:nth-child(2) { width: 7%; }
@@ -94,6 +98,7 @@
         {% elif not movers.gainers %}
             <p class="empty">No price increases since the last snapshot.</p>
         {% else %}
+        <div class="table-scroll">
         <table class="movers-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.gainers %}
@@ -107,6 +112,7 @@
             </tr>
             {% endfor %}
         </table>
+        </div>
         {% endif %}
     </div>
 
@@ -117,6 +123,7 @@
         {% elif not movers.losers %}
             <p class="empty">No price decreases since the last snapshot.</p>
         {% else %}
+        <div class="table-scroll">
         <table class="movers-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Old</th><th>New</th><th>Change</th></tr>
             {% for m in movers.losers %}
@@ -130,6 +137,7 @@
             </tr>
             {% endfor %}
         </table>
+        </div>
         {% endif %}
     </div>
 
@@ -138,6 +146,7 @@
         {% if not most_valuable %}
             <p class="empty">No priced cards yet.</p>
         {% else %}
+        <div class="table-scroll">
         <table class="valuable-table">
             <tr><th>Card</th><th>#</th><th>Set</th><th>Price</th><th>Total</th></tr>
             {% for m in most_valuable %}
@@ -150,6 +159,7 @@
             </tr>
             {% endfor %}
         </table>
+        </div>
         {% endif %}
     </div>
 </div>
